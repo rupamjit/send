@@ -1,7 +1,5 @@
 import Link from "next/link";
 import Card from "../components/Card";
-import Container from "../components/Container";
-import Navbar from "../components/Navbar";
 import { Folder,AlignLeft, LucideIcon } from 'lucide-react';
 
 interface Features {
@@ -28,9 +26,7 @@ const features:Features[] = [
 
 export default function Home() {
   return (
-    <Container >
       <div>
-        <Navbar />
         <main className="max-w-4xl mx-auto px-6 py-16">
           <div className="text-center mb-16">
             <h2 className={`text-3xl md:text-6xl font-extrabold mb-6`}>
@@ -49,6 +45,5 @@ export default function Home() {
           </div>
         </main>
       </div>
-    </Container>
   );
 }

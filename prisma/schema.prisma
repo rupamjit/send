@@ -19,6 +19,9 @@ model Share {
 
   fileKey String?
   fileId  String?
+  fileName String?
+  size String?
+  type String?
 
   uploadedConfirmed Boolean? @default(false)
 
