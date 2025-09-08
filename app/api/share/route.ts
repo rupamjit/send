@@ -1,23 +1,41 @@
 import { db } from "@/utils/db";
 import { NextRequest, NextResponse } from "next/server";
-
-export const POST = async (req:NextRequest,res:NextResponse)=>{
-    const body = await req.json();
-    console.log(body)
-
-    // await db.share.create({
-    //     data:{
-    //         id
-    //         fileId,
-    //         fileKey,
-    //         createdAt,
-    //         deletedAt,
-    //         expiresAt,
-       
-
-    //     }
-    // })
-
-    
-
+import crypto from 'crypto';
+function generateCode() {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let result = "";
+  for (let i = 0; i < 6; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
 }
+
+export const POST = async (req: NextRequest, res: NextResponse) => {
+  const { expiryTime, key, size, name, type, ufsUrl } = await req.json();
+
+  const code = generateCode();
+  const hashedCode = crypto.createHash("sha256").update(code).digest('hex')
+
+
+  const sizeInMb = `${(size / (1024 * 1024)).toFixed(2)} MB`;
+
+  const share = await db.share.create({
+    data: {
+      size: sizeInMb,
+      fileName: name,
+      type,
+      fileId: ufsUrl,
+      fileKey: key,
+      createdAt: new Date(),
+      expiresAt: new Date(Date.now() + expiryTime * 60 * 1000),
+      codeHash: hashedCode,
+    },
+  });
+
+
+    return NextResponse.json({ 
+      message: "Share created successfully",
+      accessCode: code,
+      shareId: share.id
+    });
+};
