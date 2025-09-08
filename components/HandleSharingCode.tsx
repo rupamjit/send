@@ -24,7 +24,7 @@ const HandleSharingCode = () => {
   const [code, setCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const handleDialogChange = useCallback((open) => {
+  const handleDialogChange = useCallback((open:boolean) => {
     setIsOpen(open);
     if (!open) {
       setCode("");

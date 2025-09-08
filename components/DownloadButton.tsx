@@ -11,7 +11,7 @@ interface DownloadButtonProps {
   fileUrl?:string
 }
 
-const DownloadButton: React.FC<DownloadButtonProps> = ({fileUrl, fileKey, fileName, size }) => {
+const DownloadButton: React.FC<DownloadButtonProps> = ({fileUrl, fileName, size }) => {
   const handleDownload = () => {
     const link = document.createElement('a');
     link.href = fileUrl!;

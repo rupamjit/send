@@ -1,6 +1,6 @@
 "use client";
 import { FileUpload } from "@/components/ui/file-upload";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useUploadThing } from "@/utils/uploadthing";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";

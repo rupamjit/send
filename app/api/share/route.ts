@@ -9,7 +9,7 @@ function generateCode() {
   return result;
 }
 
-export const POST = async (req: NextRequest, res: NextResponse) => {
+export const POST = async (req: NextRequest) => {
   const { expiryTime, key, size, name, type, ufsUrl,text } = await req.json();
 
 
