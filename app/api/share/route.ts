@@ -14,7 +14,6 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
   const { expiryTime, key, size, name, type, ufsUrl } = await req.json();
 
   const code = generateCode();
-  const hashedCode = crypto.createHash("sha256").update(code).digest('hex')
 
 
   const sizeInMb = `${(size / (1024 * 1024)).toFixed(2)} MB`;
@@ -28,7 +27,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
       fileKey: key,
       createdAt: new Date(),
       expiresAt: new Date(Date.now() + expiryTime * 60 * 1000),
-      codeHash: hashedCode,
+      codeHash: code,
     },
   });
 

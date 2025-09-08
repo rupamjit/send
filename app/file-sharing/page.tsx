@@ -1,6 +1,6 @@
 "use client";
 import { FileUpload } from "@/components/ui/file-upload";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useUploadThing } from "@/utils/uploadthing";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -15,26 +15,40 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
+import axios from "axios";
+import { redirect } from "next/navigation";
 
+interface FileDetails {
+  key: string;
+  name: string;
+  size: number;
+  type: string;
+  ufsUrl: string;
+}
 
 const Page = () => {
+
+  const [url,setUrl] = useState("")
+
+  useEffect(()=>{
+    setUrl(window.location.href);
+  },[])
+
+
   const [file, setFile] = useState<File | null>(null);
   const [expiryTime, setExpiryTime] = useState([15]);
-  const [fileDetails,setFileDetails] = useState(null)
-
-  
+  const [fileDetails, setFileDetails] = useState<FileDetails>();
 
   const { isUploading, startUpload } = useUploadThing("fileUploader", {
     onClientUploadComplete: (fileDetails) => {
-      setFileDetails(fileDetails[0])
-      console.log(fileDetails[0])
+      setFileDetails(fileDetails[0].serverData.file);
+      // console.log(fileDetails[0].serverData.file);
       toast("Successfully Verified");
     },
     onUploadError: () => {
       toast("Something Went wrong");
     },
   });
-  console.log("FileDetails",fileDetails)
 
   const handleFileUpload = (files: File[]) => {
     if (files.length > 0) {
@@ -42,6 +56,23 @@ const Page = () => {
       setFile(selectedFile);
       startUpload([selectedFile]);
     }
+  };
+
+  const handleSharing = async () => {
+    const reqData = {
+      size: fileDetails?.size,
+      key: fileDetails?.key,
+      name: fileDetails?.name,
+      type: fileDetails?.type,
+      ufsUrl: fileDetails?.ufsUrl,
+      expiryTime: expiryTime[0],
+    };
+    const data = await axios.post("/api/share", reqData);
+    if(data.status == 200){
+      const accessCode = data.data.accessCode
+      redirect(`${url}/${accessCode}`)
+    }
+    toast("Something Went Wrong")
   };
 
   const formatTime = (minutes: number) => {
@@ -115,7 +146,13 @@ const Page = () => {
                     </div>
                   </div>
                 </DialogDescription>
-                <Button className="cursor-pointer mt-2">Share</Button>
+                <Button
+                  type="submit"
+                  onClick={handleSharing}
+                  className="cursor-pointer mt-2"
+                >
+                  Share
+                </Button>
               </DialogHeader>
             </DialogContent>
           </Dialog>
