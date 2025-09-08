@@ -28,13 +28,7 @@ interface FileDetails {
 }
 
 const Page = () => {
-
-  const [url,setUrl] = useState("")
-
-  useEffect(()=>{
-    setUrl(window.location.href);
-  },[])
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [file, setFile] = useState<File | null>(null);
   const [expiryTime, setExpiryTime] = useState([15]);
@@ -60,6 +54,7 @@ const Page = () => {
   };
 
   const handleSharing = async () => {
+    setIsLoading(true);
     const reqData = {
       size: fileDetails?.size,
       key: fileDetails?.key,
@@ -69,13 +64,14 @@ const Page = () => {
       expiryTime: expiryTime[0],
     };
     const data = await axios.post("/api/share", reqData);
-    if(data.status == 200){
-      const accessCode = data.data.accessCode
-      redirect(`${url}/${accessCode}`)
+    if (data.status == 200) {
+      const accessCode = data.data.accessCode;
+      redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/share/${accessCode}`);
+      setIsLoading(false);
     }
-    toast("Something Went Wrong")
+    toast("Something Went Wrong");
+    setIsLoading(false);
   };
-
 
   return (
     <div className="mt-20">
@@ -131,13 +127,27 @@ const Page = () => {
                     </div>
                   </div>
                 </DialogDescription>
-                <Button
-                  type="submit"
-                  onClick={handleSharing}
-                  className="cursor-pointer mt-2"
-                >
-                  Share
-                </Button>
+                {isLoading ? (
+                  <Button
+                    disabled
+                    type="submit"
+                    onClick={handleSharing}
+                    className="cursor-pointer mt-2"
+                  >
+                    <span>
+                      <Loader2 className="animate-spin h-4 w-4" />
+                    </span>
+                    Loading...
+                  </Button>
+                ) : (
+                  <Button
+                    type="submit"
+                    onClick={handleSharing}
+                    className="cursor-pointer mt-2"
+                  >
+                    Share
+                  </Button>
+                )}
               </DialogHeader>
             </DialogContent>
           </Dialog>
