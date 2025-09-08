@@ -17,6 +17,7 @@ import {
 import { Slider } from "@/components/ui/slider";
 import axios from "axios";
 import { redirect } from "next/navigation";
+import { calculateFormatTime } from "@/utils/calculateFormatTime";
 
 interface FileDetails {
   key: string;
@@ -75,22 +76,6 @@ const Page = () => {
     toast("Something Went Wrong")
   };
 
-  const formatTime = (minutes: number) => {
-    if (minutes < 60) {
-      return `${minutes} minutes`;
-    } else if (minutes < 1440) {
-      const hours = Math.floor(minutes / 60);
-      const remainingMinutes = minutes % 60;
-      if (remainingMinutes === 0) {
-        return `${hours} ${hours === 1 ? "hour" : "hours"}`;
-      }
-      return `${hours} ${
-        hours === 1 ? "hour" : "hours"
-      } ${remainingMinutes} minutes`;
-    } else {
-      return "1 day";
-    }
-  };
 
   return (
     <div className="mt-20">
@@ -111,7 +96,7 @@ const Page = () => {
           <Dialog>
             <DialogTrigger asChild>
               <Button
-                // disabled={!file || isUploading}
+                disabled={!file || isUploading}
                 className="text-black cursor-pointer bg-orange-400 hover:bg-amber-500"
               >
                 Share
@@ -131,7 +116,7 @@ const Page = () => {
                     <div className="flex-shrink-0 min-w-0">
                       <p className="text-black text-md font-bold">Expires in</p>
                       <p className="text-xs text-muted-foreground whitespace-nowrap">
-                        {formatTime(expiryTime[0])}
+                        {calculateFormatTime(expiryTime[0])}
                       </p>
                     </div>
                     <div className="flex-1 max-w-xs min-w-0">

@@ -1,6 +1,5 @@
 import { db } from "@/utils/db";
 import { NextRequest, NextResponse } from "next/server";
-import crypto from 'crypto';
 function generateCode() {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let result = "";
@@ -11,7 +10,8 @@ function generateCode() {
 }
 
 export const POST = async (req: NextRequest, res: NextResponse) => {
-  const { expiryTime, key, size, name, type, ufsUrl } = await req.json();
+  const { expiryTime, key, size, name, type, ufsUrl,text } = await req.json();
+
 
   const code = generateCode();
 
@@ -28,10 +28,11 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
       createdAt: new Date(),
       expiresAt: new Date(Date.now() + expiryTime * 60 * 1000),
       codeHash: code,
+      textContent:text
     },
   });
 
-
+console.log(text)
     return NextResponse.json({ 
       message: "Share created successfully",
       accessCode: code,
