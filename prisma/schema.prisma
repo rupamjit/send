@@ -28,5 +28,4 @@ model Share {
   codeHash  String?
   expiresAt DateTime?
   createdAt DateTime?
-
 }
