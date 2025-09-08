@@ -16,7 +16,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
             Content Not Found
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            The content you're looking for doesn't exist or has expired.
+            The content you&apos;re looking for doesn&apos;t exist or has expired.
           </p>
         </div>
       </div>

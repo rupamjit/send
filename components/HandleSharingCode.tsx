@@ -39,7 +39,7 @@ const HandleSharingCode = () => {
           const res = await axios.post("/api/fetchContent", { code });
 
           if (res.status === 200 && res.data) {
-            setIsOpen(false)
+            setIsOpen(false);
             router.push(
               `${process.env.NEXT_PUBLIC_BASE_URL}/share/${res.data}`
             );
