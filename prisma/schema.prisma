@@ -28,9 +28,9 @@ model Share {
   size     String?
 
   // Security
-  password  String?  // bcrypt hash
-  isOneTime Boolean  @default(false)
-  createdBy String?  // hashed IP
+  password  String? // bcrypt hash
+  isOneTime Boolean @default(false)
+  createdBy String? // hashed IP
 
   // Analytics
   viewCount     Int  @default(0)
