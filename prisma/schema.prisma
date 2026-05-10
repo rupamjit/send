@@ -14,18 +14,58 @@ datasource db {
 }
 
 model Share {
-  id          String  @id @default(uuid())
-  textContent String?
+  id       String @id @default(cuid())
+  codeHash String @unique
 
+  // Content
+  textContent String?
+  type        String?
+
+  // Single file
   fileKey  String?
   fileId   String?
   fileName String?
   size     String?
-  type     String?
 
-  uploadedConfirmed Boolean? @default(false)
+  // Security
+  password  String?  // bcrypt hash
+  isOneTime Boolean  @default(false)
+  createdBy String?  // hashed IP
 
-  codeHash  String?
-  expiresAt DateTime?
-  createdAt DateTime?
+  // Analytics
+  viewCount     Int  @default(0)
+  downloadCount Int  @default(0)
+  maxViews      Int?
+
+  // State
+  isDeleted         Boolean @default(false)
+  uploadedConfirmed Boolean @default(false)
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  // Relations
+  files ShareFile[]
+
+  @@index([codeHash])
+  @@index([expiresAt])
+  @@index([isDeleted, expiresAt])
+}
+
+model ShareFile {
+  id      String @id @default(cuid())
+  shareId String
+
+  fileKey  String
+  fileId   String
+  fileName String
+  size     String
+  type     String
+
+  createdAt DateTime @default(now())
+
+  share Share @relation(fields: [shareId], references: [id], onDelete: Cascade)
+
+  @@index([shareId])
 }
