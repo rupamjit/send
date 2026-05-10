@@ -5,23 +5,23 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Share {
   id          String  @id @default(uuid())
   textContent String?
 
-  fileKey String?
-  fileId  String?
+  fileKey  String?
+  fileId   String?
   fileName String?
-  size String?
-  type String?
+  size     String?
+  type     String?
 
   uploadedConfirmed Boolean? @default(false)
 
